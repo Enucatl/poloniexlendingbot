@@ -30,7 +30,7 @@ class Bitfinex(ExchangeApi):
         self.symbols = []
         self.ticker = {}
         self.tickerTime = 0
-	self.baseCurrencies = ['USD', 'BTC', 'ETH']
+        self.baseCurrencies = ['USD', 'BTC', 'ETH']
         self.all_currencies = self.cfg.get_all_currencies()
         self.usedCurrencies = []
         self.timeout = int(self.cfg.get("BOT", "timeout", 30, 1, 180))
@@ -94,8 +94,7 @@ class Bitfinex(ExchangeApi):
             return r.json()
 
         except Exception as ex:
-            ex.message = ex.message if ex.message else str(ex)
-            ex.message = "{0} Requesting {1}".format(ex.message, self.url + request)
+            ex.message = "{0} Requesting {1}".format(ex, self.url + request)
             raise ex
 
     @ExchangeApi.synchronized
@@ -199,7 +198,7 @@ class Bitfinex(ExchangeApi):
 
                 except Exception as ex:
                     self.log.log_error('Error retrieving ticker for {}: {}. Continue with next currency.'
-                                       .format(symbol, ex.message))
+                                       .format(symbol, ex))
                     set_ticker_time = False
                     continue
 

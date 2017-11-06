@@ -5,7 +5,7 @@ import json
 import socket
 import time
 import urllib
-import urllib2
+import requests
 import threading
 import modules.Configuration as Config
 
@@ -64,50 +64,58 @@ class Poloniex(ExchangeApi):
             req = {}
 
         def _read_response(resp):
-            resp_data = json.loads(resp.read())
-            if 'error' in resp_data:
-                raise ApiError(resp_data['error'])
-            return resp_data
+            return resp.json()
 
         try:
             if command == "returnTicker" or command == "return24hVolume":
-                ret = urllib2.urlopen(urllib2.Request('https://poloniex.com/public?command=' + command))
+                ret = requests.get(
+                    'https://poloniex.com/public',
+                    params={"command": command})
                 return _read_response(ret)
             elif command == "returnOrderBook":
-                ret = urllib2.urlopen(urllib2.Request(
-                    'https://poloniex.com/public?command=' + command + '&currencyPair=' + str(req['currencyPair'])))
+                ret = requests.get(
+                    'https://poloniex.com/public',
+                    params={
+                        "command": command,
+                        "currencyPair": str(req['currencyPair']),
+                    })
                 return _read_response(ret)
             elif command == "returnMarketTradeHistory":
-                ret = urllib2.urlopen(urllib2.Request(
-                    'https://poloniex.com/public?command=' + "returnTradeHistory" + '&currencyPair=' + str(
-                        req['currencyPair'])))
+                ret = requests.get('https://poloniex.com/public',
+                params={
+                    "command": "returnTradeHistory",
+                    "currencyPair": str(req['currencyPair']),
+                })
                 return _read_response(ret)
             elif command == "returnLoanOrders":
-                req_url = ('https://poloniex.com/public?command=' + "returnLoanOrders"
-                           + '&currency=' + str(req['currency']))
-                if req['limit'] > 0:
-                    req_url += ('&limit=' + str(req['limit']))
-                ret = urllib2.urlopen(urllib2.Request(req_url))
+                req_url = "https://poloniex.com/public"
+                params = {
+                    "command": command,
+                    "currency": req["currency"],
+                }
+                if req["limit"] > 0:
+                    params["limit"] = req["limit"]
+                ret = requests.get(req_url, params=params)
                 return _read_response(ret)
             else:
                 req['command'] = command
                 req['nonce'] = int(time.time() * 1000)
-                post_data = urllib.urlencode(req)
-
-                sign = hmac.new(self.Secret, post_data, hashlib.sha512).hexdigest()
+                post_data = urllib.parse.urlencode(req).encode()
+                sign = hmac.new(self.Secret.encode(), post_data, hashlib.sha512).hexdigest()
                 headers = {
                     'Sign': sign,
                     'Key': self.APIKey
                 }
-
-                ret = urllib2.urlopen(urllib2.Request('https://poloniex.com/tradingApi', post_data, headers))
+                ret = requests.get(
+                    'https://poloniex.com/tradingApi',
+                    params=req, headers=headers)
                 json_ret = _read_response(ret)
                 return post_process(json_ret)
 
             # Check in case something has gone wrong and the timer is too big
             self.reset_request_timer()
 
-        except urllib2.HTTPError as ex:
+        except urllib.error.HTTPError as ex:
             raw_polo_response = ex.read()
             try:
                 data = json.loads(raw_polo_response)
@@ -121,12 +129,10 @@ class Poloniex(ExchangeApi):
                     self.increase_request_timer()
                 else:
                     polo_error_msg = raw_polo_response
-            ex.message = ex.message if ex.message else str(ex)
-            ex.message = "{0} Requesting {1}.  Poloniex reports: '{2}'".format(ex.message, command, polo_error_msg)
+            ex.message = "{0} Requesting {1}.  Poloniex reports: '{2}'".format(ex, command, polo_error_msg)
             raise ex
         except Exception as ex:
-            ex.message = ex.message if ex.message else str(ex)
-            ex.message = "{0} Requesting {1}".format(ex.message, command)
+            print("{0} Requesting {1}".format(ex,  command))
             raise
 
     def return_ticker(self):

@@ -16,9 +16,8 @@ try:
     import numpy
     use_numpy = True
 except ImportError as ex:
-    ex.message = ex.message if ex.message else str(ex)
     print("WARN: Module Numpy not found, using manual percentile method instead. "
-          "It is recommended to install Numpy. Error: {0}".format(ex.message))
+          "It is recommended to install Numpy. Error: {0}".format(ex))
     use_numpy = False
 
 # Improvements
@@ -124,21 +123,18 @@ class MarketAnalysis(object):
                 db_con = self.create_connection(cur)
                 self.delete_old_data(db_con, seconds)
             except Exception as ex:
-                ex.message = ex.message if ex.message else str(ex)
-                print("Error in MarketAnalysis: {0}".format(ex.message))
+                print("Error in MarketAnalysis: {0}".format(ex))
                 traceback.print_exc()
             time.sleep(self.delete_thread_sleep)
 
     @staticmethod
     def print_traceback(ex, log_message):
-        ex.message = ex.message if ex.message else str(ex)
-        print("{0}: {1}".format(log_message, ex.message))
+        print("{0}: {1}".format(log_message, ex))
         traceback.print_exc()
 
     @staticmethod
     def print_exception_error(ex, log_message, debug=False):
-        ex.message = ex.message if ex.message else str(ex)
-        print("{0}: {1}".format(log_message, ex.message))
+        print("{0}: {1}".format(log_message, ex))
         if debug:
             import traceback
             ex_type, value, tb = sys.exc_info()
@@ -407,7 +403,7 @@ class MarketAnalysis(object):
             con = sqlite.connect(db_path)
             return con
         except Error as ex:
-            print(ex.message)
+            print(ex)
 
     def create_rate_table(self, db_con, levels):
         """

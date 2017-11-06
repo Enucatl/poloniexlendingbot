@@ -1,3 +1,14 @@
+# This fork aims at:
+
+- python 3 compatibility
+- code refactoring, namely:
+    - better packaging as a true python package with access points
+    - better handling of the bot as a daemon
+
+```
+git remote add upstream https://github.com/BitBotFactory/poloniexlendingbot.git
+```
+
 # Crypto Coin Lending Bot (aka Poloniex Lending Bot) <img src="https://nevet.me/public/icon.png" width="50">
 
 The Crypto Coin Lending Bot is written in Python and features automatic lending on exchanges Poloniex and Bitfinex.

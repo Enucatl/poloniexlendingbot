@@ -17,21 +17,6 @@ Config.init('default.cfg', Data)
 api = Poloniex(Config, Logger())
 
 
-# def multiple_api_queries(n):
-#     try:
-#         for i in xrange(n):
-#             print 'api_query ' + str(i + 1) + '\n'
-#             thread1 = threading.Thread(target=api.return_open_loan_offers)
-#             thread1.start()
-#     except Exception as e:
-#         assert False, 'api_query ' + str(i + 1) + ':' + e.message
-# 
-#
-# # Test fast api calls
-# def test_multiple_calls():
-#     multiple_api_queries(9)
-
-
 def api_rate_limit(n, start):
     api.limit_request_rate()
     # verify that the (N % 6) th request is delayed by (N / 6) sec from the start time

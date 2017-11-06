@@ -78,8 +78,7 @@ def start_web_server():
         print('Started WebServer, lendingbot status available at {0}'.format(serving_msg))
         server.serve_forever()
     except Exception as ex:
-        ex.message = ex.message if ex.message else str(ex)
-        print('Failed to start WebServer: {0}'.format(ex.message))
+        print('Failed to start WebServer: {0}'.format(ex))
 
 
 def stop_web_server():
@@ -90,5 +89,4 @@ def stop_web_server():
         print("Stopping WebServer")
         threading.Thread(target=server.shutdown).start()
     except Exception as ex:
-        ex.message = ex.message if ex.message else str(ex)
-        print("Failed to stop WebServer: {0}".format(ex.message))
+        print("Failed to stop WebServer: {0}".format(ex))

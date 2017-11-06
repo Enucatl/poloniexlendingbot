@@ -1,32 +1,19 @@
 # coding=utf-8
 import json
 import os
-from ConfigParser import SafeConfigParser
+import configparser
 from decimal import Decimal
 
-config = SafeConfigParser()
+config = configparser.ConfigParser()
 Data = None
-# This module is the middleman between the bot and a SafeConfigParser object, so that we can add extra functionality
+# This module is the middleman between the bot and a ConfigParser object, so that we can add extra functionality
 # without clogging up lendingbot.py with all the config logic. For example, added a default value to get().
 
 
 def init(file_location, data=None):
     global Data
     Data = data
-    loaded_files = config.read(file_location)
-    if len(loaded_files) != 1:
-        import shutil
-        # Copy default config file if not found
-        try:
-            shutil.copy('default.cfg.example', file_location)
-            print '\ndefault.cfg.example has been copied to ' + file_location + '\n' \
-                  'Edit it with your API key and custom settings.\n'
-            raw_input("Press Enter to acknowledge and exit...")
-            exit(1)
-        except Exception as ex:
-            ex.message = ex.message if ex.message else str(ex)
-            print("Failed to automatically copy config. Please do so manually. Error: {0}".format(ex.message))
-            exit(1)
+    config.read_file(file_location)
     return config
 
 
@@ -55,22 +42,22 @@ def get(category, option, default_value=False, lower_limit=False, upper_limit=Fa
             value = config.get(category, option)
         try:
             if lower_limit and float(value) < float(lower_limit):
-                print "WARN: [%s]-%s's value: '%s' is below the minimum limit: %s, which will be used instead." % \
-                      (category, option, value, lower_limit)
+                print("WARN: [%s]-%s's value: '%s' is below the minimum limit: %s, which will be used instead." % \
+                      (category, option, value, lower_limit))
                 value = lower_limit
             if upper_limit and float(value) > float(upper_limit):
-                print "WARN: [%s]-%s's value: '%s' is above the maximum limit: %s, which will be used instead." % \
-                      (category, option, value, upper_limit)
+                print("WARN: [%s]-%s's value: '%s' is above the maximum limit: %s, which will be used instead." % \
+                      (category, option, value, upper_limit))
                 value = upper_limit
             return value
         except ValueError:
             if default_value is None:
-                print "ERROR: [%s]-%s is not allowed to be left empty. Please check your config." % (category, option)
+                print("ERROR: [%s]-%s is not allowed to be left empty. Please check your config." % (category, option))
                 exit(1)
             return default_value
     else:
         if default_value is None:
-            print "ERROR: [%s]-%s is not allowed to be left unset. Please check your config." % (category, option)
+            print("ERROR: [%s]-%s is not allowed to be left unset. Please check your config." % (category, option))
             exit(1)
         return default_value
 
@@ -98,8 +85,7 @@ def get_coin_cfg():
                                         maxtolend=Decimal(cur[3]), maxpercenttolend=(Decimal(cur[4])) / 100,
                                         maxtolendrate=(Decimal(cur[5])) / 100)
         except Exception as ex:
-            ex.message = ex.message if ex.message else str(ex)
-            print("Coinconfig parsed incorrectly, please refer to the documentation. Error: {0}".format(ex.message))
+            print("Coinconfig parsed incorrectly, please refer to the documentation. Error: {0}".format(ex))
     else:
         for cur in get_all_currencies():
             if config.has_section(cur):
@@ -115,9 +101,8 @@ def get_coin_cfg():
                     coin_cfg[cur]['gaptop'] = Decimal(get(cur, 'gaptop', False, coin_cfg[cur]['gapbottom']))
 
                 except Exception as ex:
-                    ex.message = ex.message if ex.message else str(ex)
                     print("Coinconfig for " + cur + " parsed incorrectly, please refer to the documentation. "
-                          "Error: {0}".format(ex.message))
+                          "Error: {0}".format(ex))
                     # Need to raise this exception otherwise the bot will continue if you configured one cur correctly
                     raise
     return coin_cfg
@@ -130,9 +115,8 @@ def get_min_loan_sizes():
             try:
                 min_loan_sizes[cur] = Decimal(get(cur, 'minloansize', lower_limit=0.01))
             except Exception as ex:
-                ex.message = ex.message if ex.message else str(ex)
                 print("minloansize for " + cur + " parsed incorrectly, please refer to the documentation. "
-                      "Error: {0}".format(ex.message))
+                      "Error: {0}".format(ex))
                 # Bomb out if something isn't configured correctly
                 raise
     return min_loan_sizes
@@ -162,8 +146,8 @@ def get_gap_mode(category, option):
         full_list = ['raw', 'rawbtc', 'relative']
         value = get(category, 'gapmode', False).lower().strip(" ")
         if value not in full_list:
-            print "ERROR: Invalid entry '%s' for [%s]-gapMode. Please check your config. Allowed values are: %s" % \
-                  (value, category, ", ".join(full_list))
+            print("ERROR: Invalid entry '%s' for [%s]-gapMode. Please check your config. Allowed values are: %s" % \
+                  (value, category, ", ".join(full_list)))
             exit(1)
         return value.lower()
     else:

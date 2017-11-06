@@ -119,8 +119,7 @@ def notify_summary(sleep_time):
     try:
         log.notify(Data.stringify_total_lent(*Data.get_total_lent()), notify_conf)
     except Exception as ex:
-        ex.message = ex.message if ex.message else str(ex)
-        print("Error during summary notification: {0}".format(ex.message))
+        print("Error during summary notification: {0}".format(ex))
     scheduler.enter(sleep_time, 1, notify_summary, (sleep_time, ))
 
 
@@ -148,8 +147,7 @@ def notify_new_loans(sleep_time):
                 log.notify(text, notify_conf)
         loans_provided = new_provided
     except Exception as ex:
-        ex.message = ex.message if ex.message else str(ex)
-        print("Error during new loans notification: {0}".format(ex.message))
+        print("Error during new loans notification: {0}".format(ex))
     scheduler.enter(sleep_time, 1, notify_new_loans, (sleep_time, ))
 
 
@@ -175,7 +173,7 @@ def create_lend_offer(currency, amt, rate):
     if Config.has_option('BOT', 'endDate'):
         days_remaining = int(Data.get_max_duration(end_date, "order"))
         if int(days_remaining) <= 2:
-            print "endDate reached. Bot can no longer lend.\nExiting..."
+            print("endDate reached. Bot can no longer lend.\nExiting...")
             log.log("The end date has almost been reached and the bot can no longer lend. Exiting.")
             log.refreshStatus(Data.stringify_total_lent(*Data.get_total_lent()), Data.get_max_duration(
                 end_date, "status"))
@@ -215,10 +213,9 @@ def cancel_all():
                         msg = api.cancel_loan_offer(CUR, offer['id'])
                         log.cancelOrder(CUR, msg)
                     except Exception as ex:
-                        ex.message = ex.message if ex.message else str(ex)
-                        log.log("Error canceling loan offer: {0}".format(ex.message))
+                        log.log("Error canceling loan offer: {0}".format(ex))
         else:
-            print "Not enough " + CUR + " to lend if bot canceled open orders. Not cancelling."
+            print("Not enough " + CUR + " to lend if bot canceled open orders. Not cancelling.")
 
 
 def lend_all():
@@ -379,12 +376,12 @@ def get_gap_mode_rates(cur, cur_active_bal, cur_total_balance, ticker):
         top_rate = get_gap_rate(cur, gap_top, order_book, cur_total_balance)
     else:
         if use_gap_cfg:
-            print "WARN: Invalid setting for gapMode for [%s], using defaults..." % cur
+            print("WARN: Invalid setting for gapMode for [%s], using defaults..." % cur)
             coin_cfg[cur]['gapmode'] = "rawbtc"
             coin_cfg[cur]['gapbottom'] = 10
             coin_cfg[cur]['gaptop'] = 100
         else:
-            print "WARN: Invalid setting for gapMode, using defaults..."
+            print("WARN: Invalid setting for gapMode, using defaults...")
             gap_mode_default = "relative"
             gap_bottom_default = 10
             gap_top_default = 200
@@ -458,5 +455,5 @@ def transfer_balances():
                 log.log(log.digestApiMsg(msg))
                 log.notify(log.digestApiMsg(msg), notify_conf)
             if coin not in exchange_balances:
-                print "WARN: Incorrect coin entered for transferCurrencies: " + coin
+                print("WARN: Incorrect coin entered for transferCurrencies: " + coin)
                 transferable_currencies.remove(coin)

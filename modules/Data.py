@@ -1,6 +1,6 @@
 import datetime
 from decimal import Decimal
-from urllib import urlopen
+from urllib.request import urlopen
 import json
 
 api = None
@@ -35,8 +35,7 @@ def get_max_duration(end_date, context):
         if context == "status":
             return " - Days Remaining: " + str(diff_days)  # Status needs string
     except Exception as ex:
-        ex.message = ex.message if ex.message else str(ex)
-        print("ERROR: There is something wrong with your endDate option. Error: {0}".format(ex.message))
+        print("ERROR: There is something wrong with your endDate option. Error: {0}".format(ex))
         exit(1)
 
 
@@ -45,9 +44,9 @@ def get_total_lent():
     total_lent = {}
     rate_lent = {}
     for item in crypto_lent["provided"]:
-        item_str = item["amount"].encode("utf-8")
+        item_str = item["amount"]
         item_float = Decimal(item_str)
-        item_rate_str = item["rate"].encode("utf-8")
+        item_rate_str = item["rate"]
         item_rate_float = Decimal(item_rate_str)
         if item["currency"] in total_lent:
             crypto_lent_sum = total_lent[item["currency"]] + item_float
