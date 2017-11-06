@@ -87,27 +87,30 @@ def main(config, dryrun):
             except KeyboardInterrupt:
                 # allow existing the main bot loop
                 raise
+            except BadStatusLine:
+                print("Caught BadStatusLine exception from Poloniex, ignoring.")
+            except URLError as ex:
+                print("Caught {0} from exchange, ignoring.".format(ex))
+            except ApiError as ex:
+                print("Caught {0} reading from exchange API, ignoring.".format(ex))
             except Exception as ex:
                 log.log_error(ex)
                 log.persistStatus()
-                raise ex
                 if 'Invalid API key' in ex:
                     print("!!! Troubleshooting !!!")
                     print("Are your API keys correct? No quotation. Just plain keys.")
-                    exit(1)
+                    raise
                 elif 'Nonce must be greater' in ex:
                     print("!!! Troubleshooting !!!")
                     print("Are you reusing the API key in multiple applications? Use a unique key for every application.")
-                    exit(1)
+                    raise
                 elif 'Permission denied' in ex:
                     print("!!! Troubleshooting !!!")
                     print("Are you using IP filter on the key? Maybe your IP changed?")
-                    exit(1)
+                    raise
                 elif 'timed out' in ex:
                     print("Timed out, will retry in " +
                           str(Lending.get_sleep_time()) + "sec")
-                elif isinstance(ex, BadStatusLine):
-                    print("Caught BadStatusLine exception from Poloniex, ignoring.")
                 elif 'Error 429' in ex:
                     additional_sleep = max(130.0-Lending.get_sleep_time(), 0)
                     sum_sleep = additional_sleep + Lending.get_sleep_time()
@@ -121,10 +124,6 @@ def main(config, dryrun):
                             log.log_error('Expect this 130s ban periodically when using MarketAnalysis, it will fix itself')
                     time.sleep(additional_sleep)
                 # Ignore all 5xx errors (server error) as we can't do anything about it (https://httpstatuses.com/)
-                elif isinstance(ex, URLError):
-                    print("Caught {0} from exchange, ignoring.".format(ex))
-                elif isinstance(ex, ApiError):
-                    print("Caught {0} reading from exchange API, ignoring.".format(ex))
                 else:
                     print(traceback.format_exc())
                     print("v{0} Unhandled error, please open a Github issue so we can fix it!".format(Data.get_bot_version()))
