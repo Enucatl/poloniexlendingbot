@@ -8,10 +8,10 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-from modules.Bitfinex import Bitfinex
-import modules.Configuration as Config
-import modules.Data as Data
-from modules.Logger import Logger
+from poloniexlendingbot.Bitfinex import Bitfinex
+import poloniexlendingbot.Configuration as Config
+import poloniexlendingbot.Data as Data
+from poloniexlendingbot.Logger import Logger
 import threading
 
 Config.init('default.cfg', Data)

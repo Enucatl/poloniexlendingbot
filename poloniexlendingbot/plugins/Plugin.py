@@ -3,9 +3,9 @@
 
 class Plugin(object):
     """
-    @type cfg1: modules.Configuration
-    @type api1: modules.Poloniex.Poloniex
-    @type log1: modules.Logger.Logger
+    @type cfg1: poloniexlendingbot.Configuration
+    @type api1: poloniexlendingbot.Poloniex.Poloniex
+    @type log1: poloniexlendingbot.Logger.Logger
     """
     def __init__(self, cfg1, api1, log1, notify_config1):
         self.api = api1

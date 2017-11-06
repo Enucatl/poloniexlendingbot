@@ -7,14 +7,14 @@ from decimal import Decimal
 from http.client import BadStatusLine
 from urllib.error import URLError
 
-import modules.Configuration as Config
-import modules.Data as Data
-import modules.Lending as Lending
-import modules.MaxToLend as MaxToLend
-from modules.Logger import Logger
-import modules.PluginsManager as PluginsManager
-from modules.ExchangeApiFactory import ExchangeApiFactory
-from modules.ExchangeApi import ApiError
+import poloniexlendingbot.Configuration as Config
+import poloniexlendingbot.Data as Data
+import poloniexlendingbot.Lending as Lending
+import poloniexlendingbot.MaxToLend as MaxToLend
+from poloniexlendingbot.Logger import Logger
+import poloniexlendingbot.PluginsManager as PluginsManager
+from poloniexlendingbot.ExchangeApiFactory import ExchangeApiFactory
+from poloniexlendingbot.ExchangeApi import ApiError
 
 
 @click.command()
@@ -43,7 +43,7 @@ def main(config, dryrun):
             json_output_enabled = True
             jsonfile = Config.get('BOT', 'jsonfile', 'www/botlog.json')
 
-        import modules.WebServer as WebServer
+        import poloniexlendingbot.WebServer as WebServer
         WebServer.initialize_web_server(Config)
 
     # Configure logging
@@ -56,7 +56,7 @@ def main(config, dryrun):
     Config.init(config, Data)
     notify_conf = Config.get_notification_config()
     if Config.has_option('MarketAnalysis', 'analyseCurrencies'):
-        from modules.MarketAnalysis import MarketAnalysis
+        from poloniexlendingbot.MarketAnalysis import MarketAnalysis
         # Analysis.init(Config, api, Data)
         analysis = MarketAnalysis(Config, api)
         analysis.run()

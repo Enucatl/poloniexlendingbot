@@ -17,11 +17,11 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-from modules.MarketAnalysis import MarketAnalysis
-from modules.Configuration import get_all_currencies
-from modules.Poloniex import Poloniex
-import modules.Configuration as Config
-import modules.Data as Data
+from poloniexlendingbot.MarketAnalysis import MarketAnalysis
+from poloniexlendingbot.Configuration import get_all_currencies
+from poloniexlendingbot.Poloniex import Poloniex
+import poloniexlendingbot.Configuration as Config
+import poloniexlendingbot.Data as Data
 
 Config.init('default.cfg', Data)
 api = Poloniex(Config, None)

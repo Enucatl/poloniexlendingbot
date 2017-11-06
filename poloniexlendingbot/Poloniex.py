@@ -7,11 +7,11 @@ import time
 import urllib
 import requests
 import threading
-import modules.Configuration as Config
+import poloniexlendingbot.Configuration as Config
 
-from modules.RingBuffer import RingBuffer
-from modules.ExchangeApi import ExchangeApi
-from modules.ExchangeApi import ApiError
+from poloniexlendingbot.RingBuffer import RingBuffer
+from poloniexlendingbot.ExchangeApi import ExchangeApi
+from poloniexlendingbot.ExchangeApi import ApiError
 
 
 def post_process(before):

@@ -1,4 +1,4 @@
-from plugins import *
+from poloniexlendingbot.plugins import *
 
 config = None
 api = None
@@ -20,9 +20,9 @@ def init_plugin(plugin_name):
 
 def init(cfg, api1, log1, notify_conf1):
     """
-    @type cfg1: modules.Configuration
-    @type api1: modules.Poloniex.Poloniex
-    @type log1: modules.Logger.Logger
+    @type cfg1: poloniexlendingbot.Configuration
+    @type api1: poloniexlendingbot.Poloniex.Poloniex
+    @type log1: poloniexlendingbot.Logger.Logger
     """
     global config, api, log, notify_conf
     config = cfg

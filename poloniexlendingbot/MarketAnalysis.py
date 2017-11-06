@@ -7,11 +7,11 @@ import datetime
 import pandas as pd
 import sqlite3 as sqlite
 from sqlite3 import Error
-from modules.ExchangeApi import ApiError
+from poloniexlendingbot.ExchangeApi import ApiError
 
 # Bot libs
-import modules.Configuration as Config
-from modules.Data import truncate
+import poloniexlendingbot.Configuration as Config
+from poloniexlendingbot.Data import truncate
 try:
     import numpy
     use_numpy = True
@@ -42,8 +42,8 @@ class MarketAnalysis(object):
         self.api = api
         self.lending_style = int(config.get('MarketAnalysis', 'lendingStyle', 75, 1, 99))
         self.recorded_levels = 10
-        self.modules_dir = os.path.dirname(os.path.realpath(__file__))
-        self.top_dir = os.path.dirname(self.modules_dir)
+        self.poloniexlendingbot_dir = os.path.dirname(os.path.realpath(__file__))
+        self.top_dir = os.path.dirname(self.poloniexlendingbot_dir)
         self.db_dir = os.path.join(self.top_dir, 'market_data')
         self.recorded_levels = int(config.get('MarketAnalysis', 'recorded_levels', 3, 1, 100))
         self.data_tolerance = float(config.get('MarketAnalysis', 'data_tolerance', 15, 10, 90))

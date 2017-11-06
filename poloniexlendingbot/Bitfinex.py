@@ -7,10 +7,10 @@ import requests
 import time
 import threading
 
-from modules.ExchangeApi import ExchangeApi
-from modules.ExchangeApi import ApiError
-from modules.Bitfinex2Poloniex import Bitfinex2Poloniex
-from modules.RingBuffer import RingBuffer
+from poloniexlendingbot.ExchangeApi import ExchangeApi
+from poloniexlendingbot.ExchangeApi import ApiError
+from poloniexlendingbot.Bitfinex2Poloniex import Bitfinex2Poloniex
+from poloniexlendingbot.RingBuffer import RingBuffer
 
 
 class Bitfinex(ExchangeApi):

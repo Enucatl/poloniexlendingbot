@@ -6,10 +6,10 @@ import json
 import sys
 import time
 
-import modules.ConsoleUtils as ConsoleUtils
-import modules.Configuration as Config
-from modules.RingBuffer import RingBuffer
-from modules.Notify import send_notification
+import poloniexlendingbot.ConsoleUtils as ConsoleUtils
+import poloniexlendingbot.Configuration as Config
+from poloniexlendingbot.RingBuffer import RingBuffer
+from poloniexlendingbot.Notify import send_notification
 
 
 class ConsoleOutput(object):

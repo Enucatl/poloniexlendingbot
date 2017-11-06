@@ -1,5 +1,5 @@
 # coding=utf-8
-from plugins.Plugin import Plugin
+from poloniexlendingbot.plugins.Plugin import Plugin
 import sqlite3
 
 DB_VERSION = 2
